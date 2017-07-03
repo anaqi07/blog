@@ -14,14 +14,13 @@ def post_create(request):
 
 # def post_detail(request):
 #     return HttpResponse("<h1> Detail </h1>")
-def post_detail(request):
-    instance = instance = get_object_or_404(Post, id=1)
+def post_detail(request, post_id):
+    instance = get_object_or_404(Post, id=post_id)
     context = {
     "title": "Detail",
     "instance": instance
     }
     return render(request, 'post_detail.html', context)
-
 
 # def post_list(request):
 #     return HttpResponse("<h1> List </h1>")
