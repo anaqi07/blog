@@ -8,7 +8,7 @@
     <h1>The Post {{title}} Page, user logged in {{user}}</h1>
 
     {% for object in object_list %}
-        {{object.title}} <br>
+    <a href="{% url 'posts:detail' post_id=object.id %}">{{object.title}}</a>
         {{object.content}} <br>
         {{object.timestamp}} <br>
         {{object.updated}} <br>
