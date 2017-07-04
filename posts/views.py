@@ -44,8 +44,18 @@ def post_list(request):
 
 # def post_update(request):
 #     return HttpResponse("<h1> Update </h1>")
-def post_update(request):
-    return render(request, 'post_update.html', {})
+def post_update(request, post_id):
+    instance = get_object_or_404(Post, id=post_id)
+    form = PostForm(request.POST or None, instance = instance)
+    if form.is_valid():
+        form.save()
+        return redirect(instance.get_absolute_url())
+    context = {
+    "form":form,
+    "instance": instance,
+    "title": "Update",
+    }
+    return render(request, 'post_update.html', context)
     
 # def post_delete(request):
 #     return HttpResponse("<h1> Delete </h1>")
