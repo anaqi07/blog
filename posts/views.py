@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from .models import Post
 from django.shortcuts import get_object_or_404
 from .forms import PostForm
+from django.contrib import messages
 
 def post_home(request):
     return HttpResponse("<h1> Hello</h1>")
@@ -14,6 +15,7 @@ def post_create(request):
     form = PostForm(request.POST or None)
     if form.is_valid():
         form.save()
+        messages.success(request, "Successfully Created!")
         return redirect("posts:list")
     context = {
     "title": "Create",
@@ -49,6 +51,7 @@ def post_update(request, post_id):
     form = PostForm(request.POST or None, instance = instance)
     if form.is_valid():
         form.save()
+        messages.success(request, "Successfully Edited!")
         return redirect(instance.get_absolute_url())
     context = {
     "form":form,
