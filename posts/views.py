@@ -1,8 +1,9 @@
 from __future__ import unicode_literals
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Post
 from django.shortcuts import get_object_or_404
+from .forms import PostForm
 
 def post_home(request):
     return HttpResponse("<h1> Hello</h1>")
@@ -10,7 +11,15 @@ def post_home(request):
 # def post_create(request):
 #     return HttpResponse("<h1> Create </h1>")
 def post_create(request):
-    return render(request, 'post_create.html', {})
+    form = PostForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("posts:list")
+    context = {
+    "title": "Create",
+    "form": form,
+    }
+    return render(request, 'post_create.html', context)
 
 # def post_detail(request):
 #     return HttpResponse("<h1> Detail </h1>")
