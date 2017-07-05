@@ -8,13 +8,13 @@
 {% block content %}
 <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
-        {% if instance.image %}
-            <img src="{{instance.image.url}}" alt="" class="img-responsive">
-        {% endif %}
-        <h1>{{instance.title}} <small>{{instance.timestamp}}</small></h1>
-        {{instance.content| linebreaks}}
+		{% if instance.image %}
+		    <img src="{{instance.image.url}}" alt="" class="img-responsive">
+		{% endif %}
+		<h1>{{instance.title}} <small>{{instance.publish}}</small></h1>
+		{{instance.content| linebreaks}} <br>
 
- 		Author: {{instance.author.get_full_name}} <br>
+		Author: {{instance.author.get_full_name}} <br>
 
         <a href="https://www.facebook.com/sharer/sharer.php?u={{request.build_absolute_uri}}">
             Share on Facebook

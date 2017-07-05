@@ -5,12 +5,15 @@ from django.template.defaultfilters import slugify
 from django.db.models.signals import pre_save
 from django.contrib.auth.models import User
 
+
 class Post(models.Model):
     author = models.ForeignKey(User, default=1)
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     image = models.ImageField(null=True, blank=True, upload_to="post_images")
     content = models.TextField()
+    draft = models.BooleanField(default=False)
+    publish = models.DateField(auto_now=False, auto_now_add=False)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 
