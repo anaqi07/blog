@@ -7,6 +7,7 @@ from .forms import PostForm
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from urllib.parse import quote
+from django.conf import settings
 
 def post_home(request):
     return HttpResponse("<h1> Hello</h1>")
@@ -16,9 +17,11 @@ def post_home(request):
 def post_create(request):
     if not (request.user.is_staff or request.user.is_superuser):
         raise Http404
-    form = PostForm(request.POST or None , request.FILES or None)
+    form = PostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        form.save()
+        post = form.save(commit = False)
+        post.author = request.user
+        post.save()
         messages.success(request, "Successfully Created!")
         return redirect("posts:list")
     context = {
