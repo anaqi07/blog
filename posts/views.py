@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from .forms import PostForm
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from urllib.parse import quote
 
 def post_home(request):
     return HttpResponse("<h1> Hello</h1>")
@@ -26,13 +27,34 @@ def post_create(request):
 
 # def post_detail(request):
 #     return HttpResponse("<h1> Detail </h1>")
-def post_detail(request, post_id):
-    instance = get_object_or_404(Post, id=post_id)
+def post_detail(request, post_slug):
+    instance = get_object_or_404(Post, slug=post_slug)
     context = {
     "title": "Detail",
-    "instance": instance
+    "instance": instance,
+    "share_string": quote(instance.content)
     }
     return render(request, 'post_detail.html', context)
+    
+def post_update(request, post_slug):
+    instance = get_object_or_404(Post, slug=post_slug)
+    form = PostForm(request.POST or None, request.FILES or None, instance = instance)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Successfully Edited!")
+        return redirect(instance.get_absolute_url())
+    context = {
+    "form":form,
+    "instance": instance,
+    "title": "Update",
+    }
+    return render(request, 'post_update.html', context)
+
+def post_delete(request, post_slug):
+    instance = get_object_or_404(Post, slug=post_slug)
+    instance.delete()
+    messages.success(request, "Successfully Deleted!")
+    return redirect("posts:list")
 
 # def post_list(request):
 #     return HttpResponse("<h1> List </h1>")
@@ -56,27 +78,4 @@ def post_list(request):
     }
     return render(request, 'post_list.html', context)
 
-# def post_update(request):
-#     return HttpResponse("<h1> Update </h1>")
-def post_update(request, post_id):
-    instance = get_object_or_404(Post, id=post_id)
-    form = PostForm(request.POST or None , request.FILES or None, instance = instance)
-    if form.is_valid():
-        form.save()
-        messages.success(request, "Successfully Edited!")
-        return redirect(instance.get_absolute_url())
-    context = {
-    "form":form,
-    "instance": instance,
-    "title": "Update",
-    }
-    return render(request, 'post_update.html', context)
-    
-# def post_delete(request):
-#     return HttpResponse("<h1> Delete </h1>")
-def post_delete(request, post_id):
-    instance = get_object_or_404(Post, id=post_id)
-    instance.delete()
-    messages.success(request, "Successfully Deleted!")
-    return redirect("posts:list")
      
