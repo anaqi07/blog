@@ -13,7 +13,7 @@ def post_home(request):
 # def post_create(request):
 #     return HttpResponse("<h1> Create </h1>")
 def post_create(request):
-    form = PostForm(request.POST or None)
+    form = PostForm(request.POST or None , request.FILES or None)
     if form.is_valid():
         form.save()
         messages.success(request, "Successfully Created!")
@@ -55,12 +55,12 @@ def post_list(request):
     "user": request.user
     }
     return render(request, 'post_list.html', context)
-    
+
 # def post_update(request):
 #     return HttpResponse("<h1> Update </h1>")
 def post_update(request, post_id):
     instance = get_object_or_404(Post, id=post_id)
-    form = PostForm(request.POST or None, instance = instance)
+    form = PostForm(request.POST or None , request.FILES or None, instance = instance)
     if form.is_valid():
         form.save()
         messages.success(request, "Successfully Edited!")
