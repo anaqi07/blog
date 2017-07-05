@@ -36,7 +36,7 @@ def post_detail(request, post_id):
 # def post_list(request):
 #     return HttpResponse("<h1> List </h1>")
 def post_list(request):
-    object_list = Post.objects.all()
+    object_list = Post.objects.all().order_by("-timestamp","-updated")
     context = {
     "object_list": object_list,
     "title": "List",
