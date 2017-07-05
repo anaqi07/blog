@@ -5,6 +5,7 @@ from .models import Post
 from django.shortcuts import get_object_or_404
 from .forms import PostForm
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def post_home(request):
     return HttpResponse("<h1> Hello</h1>")
@@ -36,14 +37,25 @@ def post_detail(request, post_id):
 # def post_list(request):
 #     return HttpResponse("<h1> List </h1>")
 def post_list(request):
-    object_list = Post.objects.all().order_by("-timestamp","-updated")
+    object_list = Post.objects.all() #.order_by("-timestamp","-updated")
+
+    paginator = Paginator(object_list, 5) # Show 5 contacts per page
+    page = request.GET.get('page')
+    try:
+        objects = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        objects = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        objects = paginator.page(paginator.num_pages)
     context = {
-    "object_list": object_list,
+    "object_list": objects,
     "title": "List",
     "user": request.user
     }
     return render(request, 'post_list.html', context)
-
+    
 # def post_update(request):
 #     return HttpResponse("<h1> Update </h1>")
 def post_update(request, post_id):
